@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public interface LeadRepository extends JpaRepository<Lead, String> {
+public interface LeadRepository extends JpaRepository<Lead, Long> {
     
     Page<Lead> findByCountry(String country, Pageable pageable);
     

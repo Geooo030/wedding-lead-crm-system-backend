@@ -9,8 +9,8 @@ import java.time.LocalDateTime;
 @Table(name = "users")
 public class User {
     @Id
-    @Column(length = 36)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     
     @Column(unique = true, nullable = false, length = 50)
     private String username;

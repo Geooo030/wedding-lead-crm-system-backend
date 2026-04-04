@@ -1,6 +1,6 @@
 -- 用户表
 CREATE TABLE IF NOT EXISTS `users` (
-  `id` VARCHAR(36) NOT NULL,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(50) NOT NULL UNIQUE,
   `password_hash` VARCHAR(255) NOT NULL,
   `password` VARCHAR(100),
@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 -- 客户线索表
 CREATE TABLE IF NOT EXISTS `leads` (
-  `id` VARCHAR(36) NOT NULL,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
   `company_name` VARCHAR(255) NOT NULL,
   `company_type` VARCHAR(100),
   `country` VARCHAR(100),
@@ -39,9 +39,10 @@ CREATE TABLE IF NOT EXISTS `leads` (
 
 -- 跟进记录表
 CREATE TABLE IF NOT EXISTS `follow_records` (
-  `id` VARCHAR(36) NOT NULL,
-  `lead_id` VARCHAR(36) NOT NULL,
-  `operator_id` VARCHAR(36) NOT NULL,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `lead_id` BIGINT,
+  `operator_id` BIGINT,
+  `agent_id` BIGINT,
   `contact_method` VARCHAR(20) NOT NULL,
   `contact_result` VARCHAR(20) NOT NULL,
   `customer_intention` VARCHAR(20) DEFAULT 'medium',
@@ -57,7 +58,7 @@ CREATE TABLE IF NOT EXISTS `follow_records` (
 
 -- 代理任务表
 CREATE TABLE IF NOT EXISTS `agent_tasks` (
-  `id` VARCHAR(36) NOT NULL,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
   `task_type` VARCHAR(20) NOT NULL,
   `task_params` TEXT,
   `status` VARCHAR(20) DEFAULT 'pending',
@@ -72,7 +73,7 @@ CREATE TABLE IF NOT EXISTS `agent_tasks` (
 
 -- 报表表
 CREATE TABLE IF NOT EXISTS `reports` (
-  `id` VARCHAR(36) NOT NULL,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
   `report_type` VARCHAR(20) NOT NULL,
   `report_date` DATE NOT NULL,
   `metrics` TEXT,
@@ -85,7 +86,7 @@ CREATE TABLE IF NOT EXISTS `reports` (
 -- 初始化管理员用户（密码：admin123）
 INSERT INTO `users` (`id`, `username`, `password_hash`, `password`, `created_at`, `updated_at`)
 VALUES (
-  '1',
+  1,
   'admin',
   '$2a$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW',
   'admin123',

@@ -24,7 +24,7 @@ public class DataInitializer implements CommandLineRunner {
         // 初始化管理员用户
         if (!userRepository.existsByUsername("admin")) {
             User admin = new User();
-            admin.setId(UUID.randomUUID().toString());
+
             admin.setUsername("admin");
             admin.setPasswordHash(passwordEncoder.encode("admin123"));
             admin.setCreatedAt(LocalDateTime.now());

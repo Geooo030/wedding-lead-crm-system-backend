@@ -41,8 +41,8 @@ public class LeadController {
         
         Pageable pageable = PageRequest.of(page, size, sort);
         
-        Lead.LeadStatus statusEnum = status != null ? Lead.LeadStatus.valueOf(status) : null;
-        Lead.PriorityLevel priorityEnum = priorityLevel != null ? Lead.PriorityLevel.valueOf(priorityLevel) : null;
+        Lead.LeadStatus statusEnum = safeParseStatus(status);
+        Lead.PriorityLevel priorityEnum = safeParsePriorityLevel(priorityLevel);
         
         Page<Lead> leads = leadService.searchLeads(country, statusEnum, priorityEnum, companyType, region, keyword, pageable);
         
@@ -50,7 +50,7 @@ public class LeadController {
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<?> getLeadById(@PathVariable String id) {
+    public ResponseEntity<?> getLeadById(@PathVariable Long id) {
         Lead lead = leadService.findById(id);
         if (lead == null) {
             return ResponseEntity.status(404)
@@ -66,7 +66,7 @@ public class LeadController {
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateLead(@PathVariable String id, @RequestBody Lead lead) {
+    public ResponseEntity<?> updateLead(@PathVariable Long id, @RequestBody Lead lead) {
         Lead existing = leadService.findById(id);
         if (existing == null) {
             return ResponseEntity.status(404)
@@ -78,7 +78,7 @@ public class LeadController {
     }
     
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteLead(@PathVariable String id) {
+    public ResponseEntity<?> deleteLead(@PathVariable Long id) {
         leadService.deleteById(id);
         return ResponseEntity.ok(ApiResponse.success("删除成功", null));
     }
@@ -105,5 +105,27 @@ public class LeadController {
     public ResponseEntity<?> importLeads(@RequestBody List<Lead> leads) {
         int imported = leadService.importLeads(leads);
         return ResponseEntity.ok(ApiResponse.success("导入成功 " + imported + " 条", imported));
+    }
+    
+    private Lead.LeadStatus safeParseStatus(String status) {
+        if (status == null || status.trim().isEmpty()) {
+            return null;
+        }
+        try {
+            return Lead.LeadStatus.valueOf(status);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+    
+    private Lead.PriorityLevel safeParsePriorityLevel(String priorityLevel) {
+        if (priorityLevel == null || priorityLevel.trim().isEmpty()) {
+            return null;
+        }
+        try {
+            return Lead.PriorityLevel.valueOf(priorityLevel);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 }

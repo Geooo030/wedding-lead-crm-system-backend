@@ -15,11 +15,11 @@ public class FollowService {
         this.followRecordRepository = followRecordRepository;
     }
     
-    public List<FollowRecord> findByLeadId(String leadId) {
+    public List<FollowRecord> findByLeadId(Long leadId) {
         return followRecordRepository.findByLeadIdOrderByCreatedAtDesc(leadId);
     }
     
-    public FollowRecord findById(String id) {
+    public FollowRecord findById(Long id) {
         return followRecordRepository.findById(id).orElse(null);
     }
     

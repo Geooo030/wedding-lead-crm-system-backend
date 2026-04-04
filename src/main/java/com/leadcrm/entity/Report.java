@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 })
 public class Report {
     @Id
-    @Column(length = 36)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     
     @Enumerated(EnumType.STRING)
     @Column(name = "report_type", length = 20, nullable = false)
@@ -33,7 +33,6 @@ public class Report {
     
     @PrePersist
     protected void onCreate() {
-        if (id == null) id = java.util.UUID.randomUUID().toString();
         createdAt = LocalDateTime.now();
     }
     

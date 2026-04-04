@@ -14,8 +14,8 @@ import java.time.LocalDateTime;
 })
 public class Lead {
     @Id
-    @Column(length = 36)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     
     @Column(name = "company_name", nullable = false)
     private String companyName;
@@ -74,7 +74,6 @@ public class Lead {
     
     @PrePersist
     protected void onCreate() {
-        if (id == null) id = java.util.UUID.randomUUID().toString();
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
     }

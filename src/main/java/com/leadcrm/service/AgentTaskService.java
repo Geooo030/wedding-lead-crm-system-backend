@@ -24,15 +24,12 @@ public class AgentTaskService {
         return agentTaskRepository.findByStatusOrderByCreatedAtDesc(AgentTask.TaskStatus.pending);
     }
     
-    public AgentTask findById(String id) {
+    public AgentTask findById(Long id) {
         return agentTaskRepository.findById(id).orElse(null);
     }
     
     @Transactional
     public AgentTask createTask(AgentTask task) {
-        if (task.getId() == null) {
-            task.setId(java.util.UUID.randomUUID().toString());
-        }
         if (task.getScheduledAt() == null) {
             task.setScheduledAt(LocalDateTime.now());
         }

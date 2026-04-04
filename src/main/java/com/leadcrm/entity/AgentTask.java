@@ -9,8 +9,8 @@ import java.time.LocalDateTime;
 @Table(name = "agent_tasks")
 public class AgentTask {
     @Id
-    @Column(length = 36)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     
     @Enumerated(EnumType.STRING)
     @Column(name = "task_type", length = 20, nullable = false)
@@ -43,7 +43,6 @@ public class AgentTask {
     
     @PrePersist
     protected void onCreate() {
-        if (id == null) id = java.util.UUID.randomUUID().toString();
         createdAt = LocalDateTime.now();
     }
     

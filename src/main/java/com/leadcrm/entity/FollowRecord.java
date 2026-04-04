@@ -1,6 +1,7 @@
 package com.leadcrm.entity;
 
 import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -10,14 +11,17 @@ import java.time.LocalDateTime;
 @Table(name = "follow_records")
 public class FollowRecord {
     @Id
-    @Column(length = 36)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     
-    @Column(name = "lead_id", length = 36, nullable = false)
-    private String leadId;
+    @Column(name = "lead_id")
+    private Long leadId;
     
-    @Column(name = "operator_id", length = 36, nullable = false)
-    private String operatorId;
+    @Column(name = "operator_id")
+    private Long operatorId;
+    
+    @Column(name = "agent_id")
+    private Long agentId;
     
     @Enumerated(EnumType.STRING)
     @Column(name = "contact_method", length = 20, nullable = false)
@@ -49,11 +53,11 @@ public class FollowRecord {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lead_id", insertable = false, updatable = false)
+    @JsonIgnore
     private Lead lead;
     
     @PrePersist
     protected void onCreate() {
-        if (id == null) id = java.util.UUID.randomUUID().toString();
         createdAt = LocalDateTime.now();
     }
     

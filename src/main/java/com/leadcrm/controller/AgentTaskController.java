@@ -30,7 +30,7 @@ public class AgentTaskController {
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<?> getTaskById(@PathVariable String id) {
+    public ResponseEntity<?> getTaskById(@PathVariable Long id) {
         AgentTask task = agentTaskService.findById(id);
         if (task == null) {
             return ResponseEntity.status(404)
@@ -40,7 +40,7 @@ public class AgentTaskController {
     }
     
     @PutMapping("/{id}/status")
-    public ResponseEntity<?> updateTaskStatus(@PathVariable String id, @RequestBody AgentTask task) {
+    public ResponseEntity<?> updateTaskStatus(@PathVariable Long id, @RequestBody AgentTask task) {
         AgentTask existing = agentTaskService.findById(id);
         if (existing == null) {
             return ResponseEntity.status(404)

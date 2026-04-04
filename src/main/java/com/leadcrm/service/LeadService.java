@@ -23,7 +23,7 @@ public class LeadService {
         return leadRepository.searchLeads(country, status, priorityLevel, companyType, region, keyword, pageable);
     }
     
-    public Lead findById(String id) {
+    public Lead findById(Long id) {
         return leadRepository.findById(id).orElse(null);
     }
     
@@ -33,7 +33,7 @@ public class LeadService {
     }
     
     @Transactional
-    public void deleteById(String id) {
+    public void deleteById(Long id) {
         leadRepository.deleteById(id);
     }
     

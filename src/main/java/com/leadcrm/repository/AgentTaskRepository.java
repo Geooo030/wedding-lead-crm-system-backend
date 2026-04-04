@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public interface AgentTaskRepository extends JpaRepository<AgentTask, String> {
+public interface AgentTaskRepository extends JpaRepository<AgentTask, Long> {
     List<AgentTask> findByStatusOrderByCreatedAtDesc(AgentTask.TaskStatus status);
     List<AgentTask> findByStatusAndScheduledAtBefore(AgentTask.TaskStatus status, LocalDateTime scheduledAt);
     List<AgentTask> findTop10ByOrderByCreatedAtDesc();
