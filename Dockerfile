@@ -12,4 +12,7 @@ WORKDIR /app
 RUN apk add --no-cache tzdata && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo "Asia/Shanghai" > /etc/timezone
 COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+
+# 默认使用 prod 环境
+ENV SPRING_PROFILES_ACTIVE=prod
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=prod", "app.jar"]
