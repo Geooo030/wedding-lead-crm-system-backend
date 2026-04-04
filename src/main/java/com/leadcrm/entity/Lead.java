@@ -1,9 +1,7 @@
 package com.leadcrm.entity;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Data;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 import java.time.LocalDateTime;
 
 @Data
@@ -45,8 +43,7 @@ public class Lead {
     @Column(name = "business_scope", columnDefinition = "TEXT")
     private String businessScope;
     
-    @Column(name = "intent_signals", columnDefinition = "JSON")
-    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "intent_signals", columnDefinition = "TEXT")
     private String intentSignals;
     
     @Column(name = "decision_maker_role", length = 100)

@@ -1,9 +1,7 @@
 package com.leadcrm.entity;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Data;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 import java.time.LocalDateTime;
 
 @Data
@@ -18,16 +16,14 @@ public class AgentTask {
     @Column(name = "task_type", length = 20, nullable = false)
     private TaskType taskType;
     
-    @Column(name = "task_params", columnDefinition = "JSON")
-    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "task_params", columnDefinition = "TEXT")
     private String taskParams;
     
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
     private TaskStatus status = TaskStatus.pending;
     
-    @Column(columnDefinition = "JSON")
-    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "TEXT")
     private String result;
     
     @Column(name = "scheduled_at")

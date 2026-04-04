@@ -1,9 +1,7 @@
 package com.leadcrm.entity;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Data;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -24,8 +22,7 @@ public class Report {
     @Column(name = "report_date", nullable = false)
     private LocalDate reportDate;
     
-    @Column(columnDefinition = "JSON")
-    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "TEXT")
     private String metrics;
     
     @Column(name = "agent_summary", columnDefinition = "TEXT")

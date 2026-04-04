@@ -6,6 +6,8 @@ import com.leadcrm.service.FollowService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/follows")
@@ -54,16 +56,28 @@ public class FollowController {
             currentStage = latest.getCurrentStage().name();
             
             switch (latest.getCurrentStage()) {
-                case new_lead -> progress = 0;
-                case first_contact -> progress = 25;
-                case requirement -> progress = 50;
-                case quotation -> progress = 75;
-                case deal -> progress = 100;
+                case new_lead:
+                    progress = 0;
+                    break;
+                case first_contact:
+                    progress = 25;
+                    break;
+                case requirement:
+                    progress = 50;
+                    break;
+                case quotation:
+                    progress = 75;
+                    break;
+                case deal:
+                    progress = 100;
+                    break;
             }
         }
         
-        return ResponseEntity.ok(ApiResponse.success(
-                java.util.Map.of("progress", progress, "currentStage", currentStage)
-        ));
+        Map<String, Object> result = new HashMap<>();
+        result.put("progress", progress);
+        result.put("currentStage", currentStage);
+        
+        return ResponseEntity.ok(ApiResponse.success(result));
     }
 }

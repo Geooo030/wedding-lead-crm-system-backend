@@ -1,6 +1,6 @@
 package com.leadcrm.entity;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
 
@@ -17,6 +17,9 @@ public class User {
     
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
+    
+    @Column(name = "password", length = 100)
+    private String password;
     
     @Column(name = "created_at")
     private LocalDateTime createdAt;
