@@ -63,6 +63,16 @@ public class Lead {
     private String notes;
     
     @Enumerated(EnumType.STRING)
+    @Column(name = "lead_source", length = 20)
+    private LeadSource leadSource = LeadSource.manual;
+    
+    @Column(name = "lead_channel", length = 100)
+    private String leadChannel;
+    
+    @Column(name = "follow_operator", length = 100)
+    private String followOperator;
+    
+    @Enumerated(EnumType.STRING)
     @Column(length = 20)
     private LeadStatus status = LeadStatus.new_lead;
     
@@ -90,4 +100,10 @@ public class Lead {
     public enum LeadStatus {
         new_lead, contacting, negotiating, converted, lost
     }
+    
+    public enum LeadSource {
+        ai, manual
+    }
+    
+
 }

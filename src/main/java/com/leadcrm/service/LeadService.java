@@ -70,4 +70,8 @@ public class LeadService {
         }
         return imported;
     }
+    
+    public List<String> getDistinctCountries() {
+        return leadRepository.findDistinctCountries();
+    }
 }

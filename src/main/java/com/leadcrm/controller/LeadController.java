@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/api/leads")
@@ -35,11 +36,8 @@ public class LeadController {
             @RequestParam(defaultValue = "createdAt") String sortBy,
             @RequestParam(defaultValue = "desc") String sortDir) {
         
-        Sort sort = sortDir.equalsIgnoreCase("asc") 
-                ? Sort.by(sortBy).ascending() 
-                : Sort.by(sortBy).descending();
-        
-        Pageable pageable = PageRequest.of(page, size, sort);
+        // 排序逻辑已在数据库查询中处理，这里只需要分页
+        Pageable pageable = PageRequest.of(page, size);
         
         Lead.LeadStatus statusEnum = safeParseStatus(status);
         Lead.PriorityLevel priorityEnum = safeParsePriorityLevel(priorityLevel);
@@ -105,6 +103,12 @@ public class LeadController {
     public ResponseEntity<?> importLeads(@RequestBody List<Lead> leads) {
         int imported = leadService.importLeads(leads);
         return ResponseEntity.ok(ApiResponse.success("导入成功 " + imported + " 条", imported));
+    }
+    
+    @GetMapping("/countries")
+    public ResponseEntity<?> getCountries() {
+        List<String> countries = leadService.getDistinctCountries();
+        return ResponseEntity.ok(ApiResponse.success(countries));
     }
     
     private Lead.LeadStatus safeParseStatus(String status) {

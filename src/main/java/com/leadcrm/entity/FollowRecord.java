@@ -62,18 +62,62 @@ public class FollowRecord {
     }
     
     public enum ContactMethod {
-        phone, whatsapp, email, visit
+        phone, whatsapp, email, visit;
+        
+        public static ContactMethod codeOf(String code) {
+            if (code == null || code.trim().isEmpty()) {
+                return null;
+            }
+            try {
+                return valueOf(code);
+            } catch (IllegalArgumentException e) {
+                return null;
+            }
+        }
     }
     
     public enum ContactResult {
-        reached, unreachable, callback, failed
+        reached, unreachable, callback, failed;
+        
+        public static ContactResult codeOf(String code) {
+            if (code == null || code.trim().isEmpty()) {
+                return null;
+            }
+            try {
+                return valueOf(code);
+            } catch (IllegalArgumentException e) {
+                return null;
+            }
+        }
     }
     
     public enum CustomerIntention {
-        high, medium, low, none
+        high, medium, low, none;
+        
+        public static CustomerIntention codeOf(String code) {
+            if (code == null || code.trim().isEmpty()) {
+                return null;
+            }
+            try {
+                return valueOf(code);
+            } catch (IllegalArgumentException e) {
+                return null;
+            }
+        }
     }
     
     public enum FollowStage {
-        new_lead, first_contact, requirement, quotation, deal
+        new_lead, first_contact, requirement, quotation, deal, rejected;
+        
+        public static FollowStage codeOf(String code) {
+            if (code == null || code.trim().isEmpty()) {
+                return null;
+            }
+            try {
+                return valueOf(code);
+            } catch (IllegalArgumentException e) {
+                return null;
+            }
+        }
     }
 }

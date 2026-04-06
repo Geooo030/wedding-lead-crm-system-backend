@@ -29,7 +29,18 @@ public interface LeadRepository extends JpaRepository<Lead, Long> {
            "(:priorityLevel IS NULL OR l.priorityLevel = :priorityLevel) AND " +
            "(:companyType IS NULL OR l.companyType = :companyType) AND " +
            "(:region IS NULL OR l.region = :region) AND " +
-           "(:keyword IS NULL OR l.companyName LIKE %:keyword% OR l.contactPhone LIKE %:keyword% OR l.contactEmail LIKE %:keyword%)")
+           "(:keyword IS NULL OR l.companyName LIKE %:keyword% OR l.contactPhone LIKE %:keyword% OR l.contactEmail LIKE %:keyword%) " +
+           "ORDER BY " +
+           "CASE l.status " +
+           "   WHEN 'negotiating' THEN 1 " +
+           "   WHEN 'contacting' THEN 2 " +
+           "   WHEN 'converted' THEN 3 " +
+           "   WHEN 'new_lead' THEN 4 " +
+           "   WHEN 'lost' THEN 5 " +
+           "   ELSE 6 " +
+           "END, " +
+           "l.priorityScore DESC, " +
+           "l.updatedAt DESC")
     Page<Lead> searchLeads(
             @Param("country") String country,
             @Param("status") Lead.LeadStatus status,
@@ -52,4 +63,7 @@ public interface LeadRepository extends JpaRepository<Lead, Long> {
     List<Object[]> countByPriorityLevel();
     
     boolean existsByCompanyNameAndContactPhone(String companyName, String contactPhone);
+    
+    @Query("SELECT DISTINCT l.country FROM Lead l WHERE l.country IS NOT NULL AND l.country != '' ORDER BY l.country")
+    List<String> findDistinctCountries();
 }

@@ -2,8 +2,11 @@ package com.leadcrm.controller;
 
 import com.leadcrm.dto.ApiResponse;
 import com.leadcrm.dto.FollowRecordRequest;
+import com.leadcrm.dto.FollowRecordWithOperator;
 import com.leadcrm.entity.FollowRecord;
+import com.leadcrm.entity.Lead;
 import com.leadcrm.entity.User;
+import com.leadcrm.repository.LeadRepository;
 import com.leadcrm.repository.UserRepository;
 import com.leadcrm.service.FollowService;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +16,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import static com.leadcrm.entity.FollowRecord.FollowStage.*;
 
 @RestController
 @RequestMapping("/api/follows")
@@ -20,16 +26,30 @@ public class FollowController {
     
     private final FollowService followService;
     private final UserRepository userRepository;
+    private final LeadRepository leadRepository;
     
-    public FollowController(FollowService followService, UserRepository userRepository) {
+    public FollowController(FollowService followService, UserRepository userRepository, LeadRepository leadRepository) {
         this.followService = followService;
         this.userRepository = userRepository;
+        this.leadRepository = leadRepository;
     }
     
     @GetMapping("/lead/{leadId}")
     public ResponseEntity<?> getFollowRecordsByLeadId(@PathVariable Long leadId) {
         List<FollowRecord> records = followService.findByLeadId(leadId);
-        return ResponseEntity.ok(ApiResponse.success(records));
+        
+        List<FollowRecordWithOperator> result = records.stream().map(record -> {
+            String operatorUsername = "未知";
+            if (record.getOperatorId() != null) {
+                User operator = userRepository.findById(record.getOperatorId()).orElse(null);
+                if (operator != null) {
+                    operatorUsername = operator.getUsername();
+                }
+            }
+            return FollowRecordWithOperator.from(record, operatorUsername);
+        }).collect(Collectors.toList());
+        
+        return ResponseEntity.ok(ApiResponse.success(result));
     }
     
     @PostMapping
@@ -47,6 +67,43 @@ public class FollowController {
         }
         
         FollowRecord saved = followService.save(record);
+        
+        // 根据当前阶段自动更新客户状态和跟进人
+        if (request.getLeadId() != null) {
+            Lead lead = leadRepository.findById(request.getLeadId()).orElse(null);
+            if (lead != null) {
+                // 更新跟进人为当前用户
+                if (user != null) {
+                    lead.setFollowOperator(user.getUsername());
+                } else {
+                    lead.setFollowOperator("admin");
+                }
+                
+                // 根据当前阶段更新客户状态
+                if (request.getCurrentStage() != null) {
+                    FollowRecord.FollowStage followStage = FollowRecord.FollowStage.codeOf(request.getCurrentStage());
+                    if (followStage != null) {
+                        switch (followStage) {
+                            case first_contact:
+                                lead.setStatus(Lead.LeadStatus.contacting);
+                                break;
+                            case requirement:
+                            case quotation:
+                                lead.setStatus(Lead.LeadStatus.negotiating);
+                                break;
+                            case deal:
+                                lead.setStatus(Lead.LeadStatus.converted);
+                                break;
+                            case rejected:
+                                lead.setStatus(Lead.LeadStatus.lost);
+                                break;
+                        }
+                    }
+                }
+                leadRepository.save(lead);
+            }
+        }
+        
         return ResponseEntity.ok(ApiResponse.success("创建成功", saved));
     }
     
@@ -94,6 +151,9 @@ public class FollowController {
                         break;
                     case deal:
                         progress = 100;
+                        break;
+                    case rejected:
+                        progress = 0;
                         break;
                 }
             }
