@@ -70,4 +70,23 @@ public class AuthController {
     public ResponseEntity<?> logout() {
         return ResponseEntity.ok(ApiResponse.success("登出成功"));
     }
+    
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody LoginRequest request) {
+        // 检查用户名是否已存在
+        if (userRepository.findByUsername(request.getUsername()).isPresent()) {
+            return ResponseEntity.status(400)
+                    .body(ApiResponse.error("用户名已存在"));
+        }
+        
+        // 创建新用户
+        User user = new User();
+        user.setUsername(request.getUsername());
+        user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
+        user.setPassword(request.getPassword()); // 保存明文密码（仅用于开发环境）
+        
+        userRepository.save(user);
+        
+        return ResponseEntity.ok(ApiResponse.success("注册成功"));
+    }
 }
