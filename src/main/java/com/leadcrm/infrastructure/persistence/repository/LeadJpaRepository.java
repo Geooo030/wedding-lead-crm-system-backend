@@ -4,6 +4,7 @@ import com.leadcrm.infrastructure.persistence.entity.LeadJpaEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface LeadJpaRepository extends JpaRepository<LeadJpaEntity, Long> {
@@ -37,4 +38,7 @@ public interface LeadJpaRepository extends JpaRepository<LeadJpaEntity, Long> {
     List<Object[]> getAgentSummary();
     
     boolean existsByCompanyNameAndContactPhone(String companyName, String contactPhone);
+    
+    @Query("SELECT COUNT(l) FROM LeadJpaEntity l WHERE l.createdAt BETWEEN :start AND :end")
+    Long countByCreatedAtBetween(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 }
