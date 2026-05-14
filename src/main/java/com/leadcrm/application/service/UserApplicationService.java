@@ -9,6 +9,7 @@ import com.leadcrm.domain.user.vo.Role;
 import com.leadcrm.domain.user.vo.UserInfo;
 import com.leadcrm.infrastructure.repository.UserRepository;
 import com.leadcrm.infrastructure.security.JwtUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -113,7 +114,7 @@ public class UserApplicationService {
         }
         
         User user = optionalUser.get();
-        if (!passwordEncoder.matches(password, user.getUserInfo().getPassword())) {
+        if (!StringUtils.equals(password, user.getUserInfo().getPassword())) {
             throw new RuntimeException("Invalid username or password");
         }
         
